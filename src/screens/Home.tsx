@@ -106,7 +106,7 @@ export const Home = () => {
   };
 
   return (
-    <StyledSafeAreaView className="flex-1 bg-gray-50">
+    <StyledSafeAreaView className="flex-1 bg-background">
       <StyledScrollView className="flex-1">
         {/* Header */}
         <StyledView className="flex-row justify-between items-center px-5 py-4">
@@ -115,12 +115,12 @@ export const Home = () => {
             <StyledText className="text-base text-text-secondary mt-1">Bem-vindo de volta!</StyledText>
           </StyledView>
           <StyledTouchableOpacity className="p-2">
-            <Ionicons name="person-circle-outline" size={32} color="#1A1A1A" />
+            <Ionicons name="person-circle-outline" size={32} color="#1E293B" />
           </StyledTouchableOpacity>
         </StyledView>
 
         {/* Balance Card */}
-        <StyledView className="bg-primary rounded-2xl p-5 mx-4 shadow-md">
+        <StyledView className="bg-indigo-800 rounded-2xl p-5 mx-4 shadow-md">
           <StyledText className="text-white/80 text-base">Saldo disponível</StyledText>
           <StyledView className="flex-row justify-between items-center mt-2">
             <StyledText className="text-white text-3xl font-bold">R$ 5.234,50</StyledText>
@@ -131,24 +131,24 @@ export const Home = () => {
         </StyledView>
 
         {/* Quick Actions */}
-        <StyledView className="flex-row justify-around py-4 mx-4 mt-4 bg-white rounded-xl shadow-sm">
+        <StyledView className="flex-row justify-around py-4 mx-4 mt-4 bg-surface rounded-xl shadow-sm">
           <StyledTouchableOpacity className="items-center">
-            <StyledView className="w-12 h-12 bg-secondary rounded-full items-center justify-center">
-              <Ionicons name="arrow-up" size={24} color="#007AFF" />
+            <StyledView className="w-12 h-12 bg-primary-light rounded-full items-center justify-center">
+              <Ionicons name="arrow-up" size={24} color="#6366F1" />
             </StyledView>
             <StyledText className="mt-2 text-sm text-text-primary">Transferir</StyledText>
           </StyledTouchableOpacity>
 
           <StyledTouchableOpacity className="items-center">
-            <StyledView className="w-12 h-12 bg-secondary rounded-full items-center justify-center">
-              <Ionicons name="barcode-outline" size={24} color="#007AFF" />
+            <StyledView className="w-12 h-12 bg-primary-light rounded-full items-center justify-center">
+              <Ionicons name="barcode-outline" size={24} color="#6366F1" />
             </StyledView>
             <StyledText className="mt-2 text-sm text-text-primary">Pagar</StyledText>
           </StyledTouchableOpacity>
 
           <StyledTouchableOpacity className="items-center">
-            <StyledView className="w-12 h-12 bg-secondary rounded-full items-center justify-center">
-              <Ionicons name="card-outline" size={24} color="#007AFF" />
+            <StyledView className="w-12 h-12 bg-primary-light rounded-full items-center justify-center">
+              <Ionicons name="card-outline" size={24} color="#6366F1" />
             </StyledView>
             <StyledText className="mt-2 text-sm text-text-primary">Cartão</StyledText>
           </StyledTouchableOpacity>
@@ -162,18 +162,18 @@ export const Home = () => {
           {transactions.map((transaction) => (
             <StyledTouchableOpacity
               key={transaction.id}
-              className="flex-row items-center bg-white p-4 rounded-xl mb-2"
+              className="flex-row items-center bg-surface p-4 rounded-xl mb-2"
               onPress={() => handleTransactionPress(transaction)}
             >
-              <StyledView className="w-10 h-10 bg-secondary rounded-full items-center justify-center">
-                <Ionicons name={transaction.icon} size={24} color="#007AFF" />
+              <StyledView className="w-10 h-10 bg-primary-light rounded-full items-center justify-center">
+                <Ionicons name={transaction.icon} size={24} color="#6366F1" />
               </StyledView>
               <StyledView className="flex-1 ml-3">
                 <StyledView className="flex-row items-center">
                   <StyledText className="text-base text-text-primary flex-1">{transaction.title}</StyledText>
                   {transaction.isSuspicious && (
-                    <StyledView className="bg-red-100 rounded-full px-2 py-1 mr-2">
-                      <Ionicons name="warning-outline" size={16} color="#FF3B30" />
+                    <StyledView className="bg-danger/10 rounded-full px-2 py-1 mr-2">
+                      <Ionicons name="warning-outline" size={16} color="#EF4444" />
                     </StyledView>
                   )}
                 </StyledView>
@@ -182,13 +182,13 @@ export const Home = () => {
               <StyledView className="items-end">
                 <StyledText 
                   className={`text-base font-semibold ${
-                    transaction.amount < 0 ? 'text-red-500' : 'text-green-500'
+                    transaction.amount < 0 ? 'text-danger' : 'text-success'
                   }`}
                 >
                   {transaction.amount < 0 ? '-' : '+'}R$ {Math.abs(transaction.amount).toFixed(2)}
                 </StyledText>
                 <StyledTouchableOpacity className="mt-1">
-                  <Ionicons name="chevron-forward" size={20} color="#666" />
+                  <Ionicons name="chevron-forward" size={20} color="#64748B" />
                 </StyledTouchableOpacity>
               </StyledView>
             </StyledTouchableOpacity>
