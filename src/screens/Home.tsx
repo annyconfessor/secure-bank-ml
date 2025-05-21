@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styled } from 'nativewind';
@@ -15,7 +16,95 @@ const StyledScrollView = styled(ScrollView);
 const StyledSafeAreaView = styled(SafeAreaView);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
+type TransactionIconName = 'cart-outline' | 'arrow-down' | 'document-text-outline' | 'arrow-up' | 'barcode-outline' | 'card-outline' | 'warning-outline' | 'eye-outline' | 'person-circle-outline' | 'chevron-forward';
+
+interface TransactionDetails {
+  merchant?: string;
+  location?: string;
+  category?: string;
+  paymentMethod?: string;
+  from?: string;
+  bank?: string;
+  description?: string;
+  recipient?: string;
+  billType?: string;
+  dueDate?: string;
+}
+
+interface Transaction {
+  id: number;
+  type: 'purchase' | 'transfer' | 'payment';
+  title: string;
+  amount: number;
+  date: string;
+  isSuspicious: boolean;
+  suspiciousReason?: string;
+  icon: TransactionIconName;
+  details: TransactionDetails;
+}
+
+// Mock data for transactions
+const transactions: Transaction[] = [
+  {
+    id: 1,
+    type: 'purchase',
+    title: 'Compra Online',
+    amount: -150.00,
+    date: 'Hoje • 14:30',
+    isSuspicious: true,
+    suspiciousReason: 'Local incomum de compra',
+    icon: 'cart-outline',
+    details: {
+      merchant: 'E-commerce XYZ',
+      location: 'São Paulo, SP',
+      category: 'Compras',
+      paymentMethod: 'Cartão de crédito final 1234',
+    }
+  },
+  {
+    id: 2,
+    type: 'transfer',
+    title: 'Transferência recebida',
+    amount: 500.00,
+    date: 'Hoje • 12:15',
+    isSuspicious: false,
+    icon: 'arrow-down',
+    details: {
+      from: 'João Silva',
+      bank: 'Banco XYZ',
+      description: 'Pagamento freelance',
+    }
+  },
+  {
+    id: 3,
+    type: 'payment',
+    title: 'Pagamento de conta',
+    amount: -89.90,
+    date: 'Ontem • 18:45',
+    isSuspicious: true,
+    suspiciousReason: 'Valor diferente do habitual',
+    icon: 'document-text-outline',
+    details: {
+      recipient: 'Serviços Web LTDA',
+      billType: 'Serviço',
+      dueDate: '15/03/2024',
+    }
+  },
+];
+
 export const Home = () => {
+  const handleTransactionPress = (transaction: Transaction) => {
+    const details = Object.entries(transaction.details)
+      .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
+      .join('\n');
+
+    Alert.alert(
+      transaction.title,
+      `${details}${transaction.isSuspicious ? '\n\nAlerta: ' + transaction.suspiciousReason : ''}`,
+      [{ text: 'OK' }]
+    );
+  };
+
   return (
     <StyledSafeAreaView className="flex-1 bg-gray-50">
       <StyledScrollView className="flex-1">
@@ -70,17 +159,39 @@ export const Home = () => {
           <StyledText className="text-xl font-bold text-text-primary mb-4">Transações Recentes</StyledText>
           
           {/* Transaction Items */}
-          {[1, 2, 3].map((item) => (
-            <StyledView key={item} className="flex-row items-center bg-white p-4 rounded-xl mb-2">
+          {transactions.map((transaction) => (
+            <StyledTouchableOpacity
+              key={transaction.id}
+              className="flex-row items-center bg-white p-4 rounded-xl mb-2"
+              onPress={() => handleTransactionPress(transaction)}
+            >
               <StyledView className="w-10 h-10 bg-secondary rounded-full items-center justify-center">
-                <Ionicons name="cart-outline" size={24} color="#007AFF" />
+                <Ionicons name={transaction.icon} size={24} color="#007AFF" />
               </StyledView>
               <StyledView className="flex-1 ml-3">
-                <StyledText className="text-base text-text-primary">Compra Online</StyledText>
-                <StyledText className="text-sm text-text-secondary mt-0.5">Hoje • 14:30</StyledText>
+                <StyledView className="flex-row items-center">
+                  <StyledText className="text-base text-text-primary flex-1">{transaction.title}</StyledText>
+                  {transaction.isSuspicious && (
+                    <StyledView className="bg-red-100 rounded-full px-2 py-1 mr-2">
+                      <Ionicons name="warning-outline" size={16} color="#FF3B30" />
+                    </StyledView>
+                  )}
+                </StyledView>
+                <StyledText className="text-sm text-text-secondary mt-0.5">{transaction.date}</StyledText>
               </StyledView>
-              <StyledText className="text-base font-semibold text-red-500">-R$ 150,00</StyledText>
-            </StyledView>
+              <StyledView className="items-end">
+                <StyledText 
+                  className={`text-base font-semibold ${
+                    transaction.amount < 0 ? 'text-red-500' : 'text-green-500'
+                  }`}
+                >
+                  {transaction.amount < 0 ? '-' : '+'}R$ {Math.abs(transaction.amount).toFixed(2)}
+                </StyledText>
+                <StyledTouchableOpacity className="mt-1">
+                  <Ionicons name="chevron-forward" size={20} color="#666" />
+                </StyledTouchableOpacity>
+              </StyledView>
+            </StyledTouchableOpacity>
           ))}
         </StyledView>
       </StyledScrollView>
